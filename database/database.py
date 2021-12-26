@@ -59,7 +59,11 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def get_transactions(self) -> Optional[List[Transaction]]:
+    def get_all_transactions(self) -> Optional[List[Transaction]]:
+        pass
+
+    @abstractmethod
+    def get_single_account_transactions(self, account_id: UUID) -> Optional[List[Transaction]]:
         pass
 
     @abstractmethod

@@ -27,16 +27,16 @@ class DatabaseMySQL(Database):
                 balance DECIMAL);
         """)
         cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS transactions (
-                        id VARCHAR(40) PRIMARY KEY,
-                        source_account VARCHAR(40),
-                        target_account VARCHAR(40),
-                        currency VARCHAR(5),
-                        balance_brutto DECIMAL,
-                        balance_netto DECIMAL,
-                        status VARCHAR(20),
-                        timestamp INT);
-                """)
+            CREATE TABLE IF NOT EXISTS transactions (
+                id VARCHAR(40) PRIMARY KEY,
+                source_account VARCHAR(40),
+                target_account VARCHAR(40),
+                currency VARCHAR(5),
+                balance_brutto DECIMAL,
+                balance_netto DECIMAL,
+                status VARCHAR(20),
+                timestamp INT);
+        """)
         self.conn.commit()
         cursor.close()
 
@@ -51,8 +51,8 @@ class DatabaseMySQL(Database):
 
         cursor = self.conn.cursor()
         cursor.execute("""
-                        UPDATE accounts SET currency = %s, balance = %s WHERE id = %s;
-                """, (account.currency, account.balance, str(account.id_)))
+            UPDATE accounts SET currency = %s, balance = %s WHERE id = %s;
+        """, (account.currency, account.balance, str(account.id_)))
 
         if cursor.rowcount == 0:
             cursor.execute("""
@@ -105,11 +105,11 @@ class DatabaseMySQL(Database):
 
         cursor = self.conn.cursor()
         cursor.execute("""
-                        UPDATE transactions 
-                        SET 
-                            status = %s, 
-                        WHERE id = %s;
-                    """, (transaction.status, transaction.id_))
+            UPDATE transactions 
+            SET 
+                status = %s, 
+            WHERE id = %s;
+        """, (transaction.status, transaction.id_))
         if cursor.rowcount == 0:
             cursor.execute("""
                 INSERT INTO accounts
@@ -137,9 +137,22 @@ class DatabaseMySQL(Database):
             timestamp=row["timestamp"],
         )
 
-    def get_transactions(self) -> Optional[List[Transaction]]:
+    def get_all_transactions(self) -> Optional[List[Transaction]]:
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM accounts;")
+        cur.execute("SELECT * FROM transactions;")
+        data = cur.fetchall()
+        if len(data) == 0:
+            return None
+        cols = [x[0] for x in cur.description]
+        df = pd.DataFrame(data, columns=cols)
+        return [self.pandas_row_to_transaction(row) for index, row in df.iterrows()]
+
+    def get_single_account_transactions(self, account_id: UUID) -> Optional[List[Transaction]]:
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT * FROM transactions
+            WHERE (source_account = %s) OR (target_account = %s);
+        """, (str(account_id), str(account_id)))
         data = cur.fetchall()
         if len(data) == 0:
             return None
@@ -149,7 +162,7 @@ class DatabaseMySQL(Database):
 
     def get_transaction(self, id_: UUID) -> Optional[Transaction]:
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM accounts WHERE id = %s;", (str(id_),))
+        cur.execute("SELECT * FROM transactions WHERE id = %s;", (str(id_),))
 
         data = cur.fetchall()
         if len(data) == 0:
@@ -159,3 +172,4 @@ class DatabaseMySQL(Database):
         return self.pandas_row_to_transaction(row=df.iloc[0])
 
     # TODO: DataFrame from cursor.fetchall() method
+    # TODO: TEST method that gets transactions associated with a specific account

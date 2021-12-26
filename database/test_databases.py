@@ -38,6 +38,8 @@ class TestAllDatabases:
         got_account = database_connected.get_account(account.id_)
         assert account == got_account
 
+        # TODO: test transactions
+
         # # test delete methods
         # # deleting existing data
         # database_connected.delete(account.id_)
