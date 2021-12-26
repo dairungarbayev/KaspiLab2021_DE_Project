@@ -14,7 +14,7 @@ class TransactionManager:
     def set_balance_netto(self, transaction: Transaction) -> None:
         # just use a single commission policy for all transactions
         # a more complex policy can be implemented later
-        transaction.balance_netto = transaction.balance_brutto * Decimal(1-self.commission_percentage)
+        transaction.balance_netto = transaction.balance_brutto * Decimal(1-self.commission_percentage/100)
 
     def cash_deposit(self, transaction: Transaction) -> None:
         if transaction.id_ is None:
