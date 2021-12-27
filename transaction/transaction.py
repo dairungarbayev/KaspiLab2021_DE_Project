@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 from uuid import UUID
@@ -13,4 +14,6 @@ class Transaction:
     balance_netto: Optional[Decimal]
     currency: str
     status: str
-    timestamp: int  # when transaction happens
+    timestamp: datetime  # when transaction happens
+
+    # TODO: raise exception if source and target currencies and currency do not match

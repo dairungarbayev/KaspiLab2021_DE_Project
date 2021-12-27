@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from uuid import UUID, uuid4
 
@@ -35,7 +36,7 @@ class DatabaseMySQL(Database):
                 balance_brutto DECIMAL,
                 balance_netto DECIMAL,
                 status VARCHAR(20),
-                timestamp INT);
+                timestamp_ DATETIME);
         """)
         self.conn.commit()
         cursor.close()
@@ -107,12 +108,12 @@ class DatabaseMySQL(Database):
         cursor.execute("""
             UPDATE transactions 
             SET 
-                status = %s, 
+                status = %s
             WHERE id = %s;
-        """, (transaction.status, transaction.id_))
+        """, (transaction.status, str(transaction.id_)))
         if cursor.rowcount == 0:
             cursor.execute("""
-                INSERT INTO accounts
+                INSERT INTO transactions
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
             """, (str(transaction.id_),
                   str(transaction.source_account),
@@ -121,7 +122,7 @@ class DatabaseMySQL(Database):
                   transaction.balance_brutto,
                   transaction.balance_netto,
                   transaction.status,
-                  transaction.timestamp,))
+                  transaction.timestamp.strftime("%Y-%m-%d %H:%M:%S"),))
         self.conn.commit()
         cursor.close()
 
@@ -134,7 +135,7 @@ class DatabaseMySQL(Database):
             balance_brutto=row["balance_brutto"],
             balance_netto=row["balance_netto"],
             status=row["status"],
-            timestamp=row["timestamp"],
+            timestamp=datetime.strptime(str(row["timestamp_"]), "%Y-%m-%d %H:%M:%S"),
         )
 
     def get_all_transactions(self) -> Optional[List[Transaction]]:

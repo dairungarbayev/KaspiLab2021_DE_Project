@@ -1,3 +1,6 @@
+import time
+from datetime import datetime
+from decimal import Decimal
 from uuid import uuid4
 
 import pytest
@@ -5,6 +8,27 @@ import pytest
 from account.account import Account
 from database.database import ObjectNotFound, Database
 from database.implementations.mysql_database import DatabaseMySQL
+from transaction.transaction import Transaction
+
+
+def get_transaction(source: Account, target: Account) -> Transaction:
+    now = datetime.now()
+    now = datetime(year=now.year,
+                   month=now.month,
+                   day=now.day,
+                   hour=now.hour,
+                   minute=now.minute,
+                   second=now.second)
+    return Transaction(
+        id_=uuid4(),
+        source_account=source.id_,
+        target_account=target.id_,
+        currency=source.currency,
+        balance_brutto=Decimal(10000),
+        balance_netto=Decimal(9900),
+        status='fulfilled',   # TODO: ---------------------------------------------------
+        timestamp=now,
+    )
 
 
 class TestAllDatabases:
@@ -39,6 +63,17 @@ class TestAllDatabases:
         assert account == got_account
 
         # TODO: test transactions
+        account3 = Account.random()
+        account4 = Account.random()
+        database_connected.save_account(account3)
+        database_connected.save_account(account4)
+
+        transaction = get_transaction(account3, account4)
+        database_connected.save_transaction(transaction)
+
+        assert transaction == database_connected.get_transaction(transaction.id_)
+        assert [transaction] == database_connected.get_single_account_transactions(transaction.source_account)
+        assert [transaction] == database_connected.get_single_account_transactions(transaction.target_account)
 
         # # test delete methods
         # # deleting existing data
