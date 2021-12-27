@@ -41,8 +41,8 @@ class TransactionManager:
         if transaction.status != 'fulfilled':  # TODO: -----------------------------------------------------------------
             if transaction.currency == target_account.currency:
                 source_account = self.database.get_account(transaction.source_account)
-                target_account += transaction.balance_netto
-                source_account -= transaction.balance_brutto
+                target_account.balance += transaction.balance_netto
+                source_account.balance -= transaction.balance_brutto
                 self.database.save_account(source_account)
                 self.database.save_account(target_account)
                 transaction.status = 'fulfilled'  # TODO: --------------------------------------------------------------
