@@ -20,6 +20,7 @@ from webapp import views
 urlpatterns = [
     path('', views.redirect_to_list),
     path('accounts/', views.accounts_list, name='accounts_list'),
-    path('accounts/<uuid:account_id>', views.account_transactions),
+    path('accounts/<uuid:account_id>', views.account_transactions, name='transactions_list'),
+    path('accounts/<uuid:account_id>/transfer', views.transfer),
     path('accounts/create_account/', views.create_account),
 ]

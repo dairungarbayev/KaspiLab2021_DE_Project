@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cash transfer</title>
+</head>
+<body>
+
+<button type="button" onclick="window.location='/accounts/{{source_account.id_}}'">Go Back</button>
+
+<form method="post">
+    <input id="transfer" type="submit" value="Transfer">
+    <input type="text" name="amount">
+    <input type="text" name="target_account">
+</form>
+
+</body>
+</html>
