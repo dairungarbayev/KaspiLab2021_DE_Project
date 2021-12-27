@@ -24,6 +24,8 @@ connection = {"host": "localhost",
 database = DatabaseMySQL(connection=connection)
 transaction_manager = TransactionManager(database=database)
 
+client_id = UUID("5309c77a-9487-49d6-9185-6dae9f9c79ed")
+
 
 def redirect_to_list(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect('accounts/')
@@ -75,3 +77,23 @@ def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
             # if result == "Successful transaction":
             #     return HttpResponseRedirect(reverse('transactions_list'))
     return render(request, "transfer.html", context={"source_account": source_account})
+
+
+def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
+    account = database.get_account(account_id)
+    if request.method == 'POST':
+        form = forms.DepositCashForm(request.POST)
+        if form.is_valid():
+            balance_brutto = form.cleaned_data['deposit_amount']
+            transaction = Transaction(
+                id_=uuid4(),
+                source_account=client_id,
+                target_account=account_id,
+                balance_brutto=Decimal(balance_brutto),
+                balance_netto=None,
+                currency=account.currency,
+                status='pending',
+                timestamp=datetime.now(),
+            )
+            result = transaction_manager.cash_deposit(transaction)
+    return render(request, "cash_deposit.html", context={"account": account})

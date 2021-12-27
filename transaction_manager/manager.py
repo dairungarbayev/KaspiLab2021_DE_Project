@@ -16,19 +16,31 @@ class TransactionManager:
         # a more complex policy can be implemented later
         transaction.balance_netto = transaction.balance_brutto * Decimal(1-self.commission_percentage/100)
 
-    def cash_deposit(self, transaction: Transaction) -> None:
+    def cash_deposit(self, transaction: Transaction) -> str:
         if transaction.id_ is None:
             transaction.id_ = uuid4()
         self.set_balance_netto(transaction)
         account = self.database.get_account(transaction.target_account)
-        if transaction.status != 'fulfilled':  # TODO: read statuses from a special class ------------------------------
-            if transaction.currency == account.currency:
-                account.balance += transaction.balance_netto
-                self.database.save_account(account)
-                transaction.status = 'fulfilled'  # TODO: --------------------------------------------------------------
-                self.database.save_transaction(transaction)
-            else:
-                print("Currencies do not match")
+
+        if transaction.status == 'fulfilled':
+            return "Transaction already fulfilled"
+        if transaction.currency != account.currency:
+            return "Currencies do not match"
+
+        account.balance += transaction.balance_netto
+        self.database.save_account(account)
+        transaction.status = 'fulfilled'  # TODO: --------------------------------------------------------------
+        self.database.save_transaction(transaction)
+        return "Successful deposit"
+
+        # if transaction.status != 'fulfilled':  # TODO: read statuses from a special class ------------------------------
+        #     if transaction.currency == account.currency:
+        #         account.balance += transaction.balance_netto
+        #         self.database.save_account(account)
+        #         transaction.status = 'fulfilled'  # TODO: --------------------------------------------------------------
+        #         self.database.save_transaction(transaction)
+        #     else:
+        #         print("Currencies do not match")
 
     def transfer(self, transaction: Transaction) -> str:
         if transaction.id_ is None:
