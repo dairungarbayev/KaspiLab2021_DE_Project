@@ -25,12 +25,14 @@ class TransactionManager:
             transaction.balance_brutto = transaction.balance_netto / ratio
 
     def cash_deposit(self, transaction: Transaction) -> str:
+        if transaction.balance_brutto < Decimal(0):
+            return "Enter positive value!"
         if transaction.id_ is None:
             transaction.id_ = uuid4()
         self.set_balance_netto(transaction)
         account = self.database.get_account(transaction.target_account)
 
-        if transaction.status == 'fulfilled':
+        if transaction.status == TransactionStatus.FULFILLED:
             return "Transaction already fulfilled"
         if transaction.currency != account.currency:
             return "Currencies do not match"
@@ -42,6 +44,8 @@ class TransactionManager:
         return "Successful deposit"
 
     def transfer(self, transaction: Transaction) -> str:
+        if transaction.balance_netto < Decimal(0):
+            return "Enter positive value!"
         if transaction.id_ is None:
             transaction.id_ = uuid4()
 
@@ -67,4 +71,3 @@ class TransactionManager:
         self.database.save_transaction(transaction)
         return "Successful transaction"
 
-    # TODO: transaction and account balances: enforce positive values!!!
