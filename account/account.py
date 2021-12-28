@@ -4,9 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional
 from uuid import UUID, uuid4
-import json
-import xml
-import xml.etree.ElementTree as ET
+
 
 class CurrencyMismatchError(ValueError):
     pass
@@ -24,31 +22,6 @@ class Account:
         if self.currency != other.currency:
             raise CurrencyMismatchError
         return self.balance < other.balance
-
-    # def to_json(self) -> dict:
-    #     return {
-    #         "id": str(self.id_),
-    #         "currency": self.currency,
-    #         "balance": float(self.balance),
-    #     }
-    #
-    # def to_json_str(self) -> str:
-    #     return json.dumps(self.to_json())
-    #
-    # @classmethod
-    # def from_json_str(cls, json_str: str) -> "Account":  # Factory
-    #     obj = json.loads(json_str)
-    #     assert "currency" in obj
-    #     assert "balance" in obj
-    #
-    #     if "id" not in obj:
-    #         raise ValueError("id should be in json string!")
-    #
-    #     return cls(
-    #         id_=UUID(obj["id"]),
-    #         currency=obj["currency"],
-    #         balance=Decimal(obj["balance"]),
-    #     )
 
     @classmethod
     def random(cls) -> "Account":  # Factory

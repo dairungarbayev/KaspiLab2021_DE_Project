@@ -69,14 +69,3 @@ class TestAllDatabases:
         assert [transaction] == database_connected.get_single_account_transactions(transaction.source_account)
         assert [transaction] == database_connected.get_single_account_transactions(transaction.target_account)
 
-        # # test delete methods
-        # # deleting existing data
-        # database_connected.delete(account.id_)
-        # with pytest.raises(ObjectNotFound):
-        #     database_connected.get_object(account.id_)
-        #
-        # # trying to delete nonexistent data
-        # all_accounts_1 = database_connected.get_objects()
-        # database_connected.delete(account.id_)   # using previously deleted account id
-        # all_accounts_2 = database_connected.get_objects()
-        # assert all_accounts_1 == all_accounts_2

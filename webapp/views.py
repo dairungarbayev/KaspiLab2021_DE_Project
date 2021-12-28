@@ -146,5 +146,3 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
             result = transaction_manager.cash_deposit(transaction)
     return render(request, "cash_deposit.html", context={"account": account, "result": result})
 
-# TODO: deposit, transfer and create_account center, add titles and labels and instructions, show result, make pretty
-# TODO: maybe make source_id in transaction optional for depositing, enforce source_id in TransactionManager

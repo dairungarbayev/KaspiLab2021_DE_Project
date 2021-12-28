@@ -68,4 +68,3 @@ class TransactionManager:
         return "Successful transaction"
 
     # TODO: transaction and account balances: enforce positive values!!!
-    # TODO: commission for transfer and deposit separate, as read-only properties
