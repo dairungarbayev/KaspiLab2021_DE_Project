@@ -16,12 +16,11 @@
 <div class="row justify-content-center align-items-center h-100">
 <form method="post">
     <label for="currency_field">Choose currency: </label>
-    <input id="currency_field" type="text" name="currency" list="currencies">
-    <datalist id="currencies">
-      <option value="KZT">
-      <option value="EUR">
-      <option value="USD">
-    </datalist>
+    <select id="currency_field" name="currency">
+        <option>KZT</option>
+        <option>USD</option>
+        <option>EUR</option>
+    </select>
     <input id="create" type="submit" value="Create account" class="btn-primary">
 </form>
 </div>

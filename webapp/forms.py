@@ -1,8 +1,10 @@
 from django import forms
 
+CHOICES = (('KZT', 'KZT'), ('USD', 'USD'), ('EUR', 'EUR'))
+
 
 class CreateAccountForm(forms.Form):
-    currency = forms.CharField()
+    currency = forms.ChoiceField(choices=CHOICES)
 
 
 class TransferCashForm(forms.Form):
