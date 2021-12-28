@@ -7,6 +7,7 @@ import pytest
 from database.database import Database
 from database.implementations.mysql_database import DatabaseMySQL
 
+# using separate Database dbtest for testing
 
 @pytest.fixture()
 def connection_dict(request: Any) -> dict:
