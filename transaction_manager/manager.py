@@ -14,7 +14,9 @@ class TransactionManager:
     def set_balance_netto(self, transaction: Transaction) -> None:
         # just use a single commission policy for all transactions
         # a more complex policy can be implemented later
-        transaction.balance_netto = transaction.balance_brutto * Decimal(1-self.commission_percentage/100)
+        if transaction.balance_netto is None:
+            ratio = Decimal(1) - Decimal(self.commission_percentage) / Decimal(100)
+            transaction.balance_netto = transaction.balance_brutto * ratio
 
     def cash_deposit(self, transaction: Transaction) -> str:
         if transaction.id_ is None:
@@ -81,6 +83,5 @@ class TransactionManager:
         #         return "Currencies do not match"
         # return "Transaction already fulfilled"
 
-    # TODO: handle transaction balance_netto, set it Optional
     # TODO: transaction and account balances: enforce positive values!!!
     # TODO: error handling, send message back
