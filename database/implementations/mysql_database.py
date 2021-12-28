@@ -79,7 +79,7 @@ class DatabaseMySQL(Database):
 
     def get_accounts(self) -> Optional[List[Account]]:
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM accounts;")
+        cur.execute("SELECT * FROM accounts ORDER BY currency, balance DESC;")
         data = cur.fetchall()
         if len(data) == 0:
             return None
@@ -152,7 +152,9 @@ class DatabaseMySQL(Database):
         cur = self.conn.cursor()
         cur.execute("""
             SELECT * FROM transactions
-            WHERE (source_account = %s) OR (target_account = %s);
+            WHERE (source_account = %s) OR (target_account = %s)
+            ORDER BY timestamp_
+            ;
         """, (str(account_id), str(account_id)))
         data = cur.fetchall()
         if len(data) == 0:
