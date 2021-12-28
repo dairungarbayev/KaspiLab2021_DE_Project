@@ -10,7 +10,7 @@ class TransactionManager:
 
     def __init__(self, database: Database):
         self.database = database
-        self.commission_percentage = 0.0
+        self.commission_percentage = 0.0  # for simplicity
 
     def set_balance_netto(self, transaction: Transaction) -> None:
         # just use a single commission policy for all transactions
