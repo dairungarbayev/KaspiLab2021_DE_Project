@@ -23,7 +23,11 @@
     {% for account in accounts %}
     <tr onclick="window.location='/accounts/{{account.id_}}'">
         <td>{{account.id_}}</td>
-        <td>{{account.balance}}</td>
+        <td
+                {% if account.id_ in maxval_ids %}
+                    class = "table-success"
+                {% endif %}
+        >{{account.balance}}</td>
         <td>{{account.currency}}</td>
     </tr>
     {% endfor %}

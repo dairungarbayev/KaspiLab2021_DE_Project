@@ -29,13 +29,22 @@ transaction_manager = TransactionManager(database=database)
 # client_id = UUID("5309c77a-9487-49d6-9185-6dae9f9c79ed")
 client_id = UUID("aaaaaaaa-0000-aaaa-0000-aaaaaaaaaaaa")
 
+
 def redirect_to_list(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect('accounts/')
 
 
 def accounts_list(request: HttpRequest) -> HttpResponse:
     accounts = database.get_accounts()
-    return render(request, "index.html", context={"accounts": accounts})
+    maxvals = {}
+    maxval_ids = []
+    for acc in accounts:
+        if acc.currency not in maxvals.keys() or acc.balance > maxvals[acc.currency]:
+            maxvals[acc.currency] = acc.balance
+    for acc in accounts:
+        if acc.balance == maxvals[acc.currency]:
+            maxval_ids.append(acc.id_)
+    return render(request, "index.html", context={"accounts": accounts, "maxval_ids": maxval_ids})
 
 
 def account_transactions(request: HttpRequest, account_id: UUID) -> HttpResponse:
@@ -98,7 +107,7 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
                 timestamp=datetime.now(),
             )
             result = transaction_manager.cash_deposit(transaction)
-    return render(request, "cash_deposit.html", context={"account": account})
+    return render(request, "cash_deposit.html", context={"source_account": account})
 
 # TODO: deposit, transfer and create_account center, add titles and labels and instructions, show result, make pretty
 # TODO: maybe make source_id in transaction optional for depositing, enforce source_id in TransactionManager
