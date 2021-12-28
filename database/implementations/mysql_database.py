@@ -182,4 +182,3 @@ class DatabaseMySQL(Database):
         return self.pandas_row_to_transaction(row=df.iloc[0])
 
     # TODO: DataFrame from cursor.fetchall() method
-    # TODO: TEST method that gets transactions associated with a specific account

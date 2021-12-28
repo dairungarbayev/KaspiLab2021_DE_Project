@@ -41,7 +41,7 @@ class TestAllDatabases:
         got_account = database_connected.get_account(account.id_)
         assert account == got_account
 
-        # TODO: test transactions
+        # test transactions
         account3 = Account.random()
         account4 = Account.random()
         database_connected.save_account(account3)
@@ -53,4 +53,5 @@ class TestAllDatabases:
         assert transaction == database_connected.get_transaction(transaction.id_)
         assert [transaction] == database_connected.get_single_account_transactions(transaction.source_account)
         assert [transaction] == database_connected.get_single_account_transactions(transaction.target_account)
-
+        assert [transaction] == database_connected.get_all_transactions()
+        assert database_connected.get_single_account_transactions(account.id_) is None
