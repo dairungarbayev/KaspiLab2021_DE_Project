@@ -121,8 +121,8 @@ def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
                 timestamp=datetime.now(),
             )
             result = transaction_manager.transfer(transaction)
-            # if result == "Successful transaction":
-            #     return HttpResponseRedirect(reverse('transactions_list'))
+            if result == "Successful transaction":
+                source_account = database.get_account(account_id)  # reload account
     return render(request, "transfer.html", context={"source_account": source_account, "result": result})
 
 
