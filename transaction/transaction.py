@@ -10,7 +10,7 @@ class Transaction:
     id_: Optional[UUID]
     source_account: UUID
     target_account: UUID
-    balance_brutto: Decimal
+    balance_brutto: Optional[Decimal]
     balance_netto: Optional[Decimal]
     currency: str
     status: str

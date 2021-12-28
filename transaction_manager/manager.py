@@ -18,6 +18,11 @@ class TransactionManager:
             ratio = Decimal(1) - Decimal(self.commission_percentage) / Decimal(100)
             transaction.balance_netto = transaction.balance_brutto * ratio
 
+    def set_balance_brutto(self, transaction: Transaction) -> None:
+        if transaction.balance_brutto is None:
+            ratio = Decimal(1) - Decimal(self.commission_percentage) / Decimal(100)
+            transaction.balance_brutto = transaction.balance_netto / ratio
+
     def cash_deposit(self, transaction: Transaction) -> str:
         if transaction.id_ is None:
             transaction.id_ = uuid4()
@@ -47,7 +52,9 @@ class TransactionManager:
     def transfer(self, transaction: Transaction) -> str:
         if transaction.id_ is None:
             transaction.id_ = uuid4()
-        self.set_balance_netto(transaction)
+
+        self.set_balance_brutto(transaction)
+
         if transaction.source_account == transaction.target_account:
             return "Transaction denied. Both accounts are the same."
 
@@ -84,5 +91,4 @@ class TransactionManager:
         # return "Transaction already fulfilled"
 
     # TODO: transaction and account balances: enforce positive values!!!
-    # TODO: error handling, send message back
-    # TODO: set brutto instead of netto
+    # TODO: commission for transfer and deposit separate, as read-only properties

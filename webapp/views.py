@@ -96,14 +96,14 @@ def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
     if request.method == 'POST':
         form = forms.TransferCashForm(request.POST)
         if form.is_valid():
-            balance_brutto = form.cleaned_data['amount']
+            balance_netto = form.cleaned_data['amount']
             target_account = form.cleaned_data['target_account']
             transaction = Transaction(
                 id_=uuid4(),
                 source_account=source_account.id_,
                 target_account=UUID(target_account),
-                balance_brutto=Decimal(balance_brutto),
-                balance_netto=None,
+                balance_brutto=None,
+                balance_netto=Decimal(balance_netto),
                 currency=source_account.currency,
                 status='pending',
                 timestamp=datetime.now(),
