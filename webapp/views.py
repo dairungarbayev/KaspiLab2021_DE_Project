@@ -3,6 +3,10 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID, uuid4
 
+import plotly
+import plotly.graph_objs as go
+import plotly.express as px
+
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from django.shortcuts import render
@@ -50,10 +54,28 @@ def accounts_list(request: HttpRequest) -> HttpResponse:
 def account_transactions(request: HttpRequest, account_id: UUID) -> HttpResponse:
     account = database.get_account(account_id)
     acc_transactions = database.get_single_account_transactions(account_id=account_id)
+
+    # init_time
+    temp_balance = Decimal(0)
+    time_x = []
+    balance_y = []
+    for tr in acc_transactions:
+        time_x.append(tr.timestamp.date())
+        if account.id_ == tr.target_account:
+            temp_balance = temp_balance + tr.balance_netto
+        else:
+            temp_balance = temp_balance - tr.balance_brutto
+        balance_y.append(temp_balance)
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=time_x, y=balance_y))
+    graph_div = plotly.offline.plot(fig, auto_open=False, output_type="div")
+
     return render(request,
                   "account_transactions.html",
                   context={"account_transactions": acc_transactions,
-                           "account": account})
+                           "account": account,
+                           "graph_div": graph_div})
 
 
 def create_account(request: HttpRequest) -> HttpResponse:
