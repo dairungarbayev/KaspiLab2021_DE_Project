@@ -9,11 +9,11 @@
 
 <button type="button" onclick="window.location='/accounts'">Go Back</button>
 
-<div class="row d-flex justify-content-center flex-nowrap">
+<div style="text-align:center">
     <h2>Create a new account</h2>
 </div>
 
-<div class="row justify-content-center align-items-center h-100">
+<div class="form-group" style="text-align:center">
 <form method="post">
     <label for="currency_field">Choose currency: </label>
     <select id="currency_field" name="currency">
@@ -21,7 +21,9 @@
         <option>USD</option>
         <option>EUR</option>
     </select>
+    <div style="margin: 1em">
     <input id="create" type="submit" value="Create account" class="btn-primary">
+    </div>
 </form>
 </div>
 </body>
