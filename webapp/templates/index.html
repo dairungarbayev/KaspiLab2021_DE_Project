@@ -21,13 +21,13 @@
     </thead>
     <tbody>
     {% for account in accounts %}
-    <tr onclick="window.location='/accounts/{{account.id_}}'">
+    <tr onclick="window.location='/accounts/{{account.id_}}'"
+        {% if account.id_ in maxval_ids %}
+            class = "table-success"
+        {% endif %}
+    >
         <td>{{account.id_}}</td>
-        <td
-                {% if account.id_ in maxval_ids %}
-                    class = "table-success"
-                {% endif %}
-        >{{account.balance}}</td>
+        <td>{{account.balance}}</td>
         <td>{{account.currency}}</td>
     </tr>
     {% endfor %}
