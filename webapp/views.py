@@ -56,6 +56,7 @@ def account_transactions(request: HttpRequest, account_id: UUID) -> HttpResponse
     acc_transactions = database.get_single_account_transactions(account_id=account_id)
 
     graph_div = ''
+    # create balance vs time plot
     if acc_transactions is not None:
         temp_balance = Decimal(0)
         time_x = [account.creation_timestamp.time()]
