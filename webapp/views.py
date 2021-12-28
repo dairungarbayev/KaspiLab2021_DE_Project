@@ -23,7 +23,7 @@ from webapp import forms
 connection = {"host": "localhost",
               "user": "root",
               "password": os.getenv("MYSQL_LOCAL_PASSWORD"),
-              "database": "dbtest"
+              "database": "kldb"
               }
 
 database = DatabaseMySQL(connection=connection)
@@ -41,12 +41,13 @@ def accounts_list(request: HttpRequest) -> HttpResponse:
     accounts = database.get_accounts()
     maxvals = {}
     maxval_ids = []
-    for acc in accounts:
-        if acc.currency not in maxvals.keys() or acc.balance > maxvals[acc.currency]:
-            maxvals[acc.currency] = acc.balance
-    for acc in accounts:
-        if acc.balance == maxvals[acc.currency]:
-            maxval_ids.append(acc.id_)
+    if accounts is not None:
+        for acc in accounts:
+            if acc.currency not in maxvals.keys() or acc.balance > maxvals[acc.currency]:
+                maxvals[acc.currency] = acc.balance
+        for acc in accounts:
+            if acc.balance == maxvals[acc.currency]:
+                maxval_ids.append(acc.id_)
     return render(request, "index.html", context={"accounts": accounts, "maxval_ids": maxval_ids})
 
 
@@ -145,4 +146,5 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
             )
             result = transaction_manager.cash_deposit(transaction)
     return render(request, "cash_deposit.html", context={"account": account, "result": result})
+
 
