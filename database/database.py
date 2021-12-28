@@ -14,26 +14,6 @@ class ObjectNotFound(ValueError):
 @dataclass
 class Database(ABC):
 
-    # @abstractmethod
-    # def save(self, obj: Optional[Account, Transaction]) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def update(self, obj: Optional[Account, Transaction]) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def clear_all(self) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def get_objects(self) -> Optional[List[Optional[Account, Transaction]]]:
-    #     pass
-    #
-    # @abstractmethod
-    # def get_object(self, id_: UUID) -> Optional[Account, Transaction]:
-    #     pass
-
     # Accounts
 
     @abstractmethod
