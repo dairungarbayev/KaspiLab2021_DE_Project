@@ -25,7 +25,9 @@ class DatabaseMySQL(Database):
             CREATE TABLE IF NOT EXISTS accounts (
                 id VARCHAR(40) PRIMARY KEY,
                 currency VARCHAR(5),
-                balance DECIMAL);
+                balance DECIMAL,
+                creation_timestamp DATETIME
+                );
         """)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS transactions (
@@ -51,15 +53,19 @@ class DatabaseMySQL(Database):
             account.id_ = uuid4()
 
         cursor = self.conn.cursor()
+        # update record, but creation_timestamp is not updated
         cursor.execute("""
             UPDATE accounts SET currency = %s, balance = %s WHERE id = %s;
         """, (account.currency, account.balance, str(account.id_)))
 
         if cursor.rowcount == 0:
             cursor.execute("""
-                INSERT INTO accounts (id, currency, balance)
-                VALUES (%s, %s, %s);
-            """, (str(account.id_), account.currency, account.balance))
+                INSERT INTO accounts (id, currency, balance, creation_timestamp)
+                VALUES (%s, %s, %s, %s);
+            """, (str(account.id_),
+                  account.currency,
+                  account.balance,
+                  account.creation_timestamp.strftime("%Y-%m-%d %H:%M:%S")))
         self.conn.commit()
         cursor.close()
 
@@ -75,6 +81,7 @@ class DatabaseMySQL(Database):
             id_=UUID(row["id"]),
             currency=row["currency"],
             balance=row["balance"],
+            creation_timestamp=datetime.strptime(str(row["creation_timestamp"]), "%Y-%m-%d %H:%M:%S"),
         )
 
     def get_accounts(self) -> Optional[List[Account]]:

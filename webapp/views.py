@@ -57,17 +57,19 @@ def account_transactions(request: HttpRequest, account_id: UUID) -> HttpResponse
 
     graph_div = ''
     if acc_transactions is not None:
-        # init_time
         temp_balance = Decimal(0)
-        time_x = []
-        balance_y = []
+        time_x = [account.creation_timestamp.time()]
+        balance_y = [Decimal(0)]
         for tr in acc_transactions:
-            time_x.append(tr.timestamp.date())
+            time_x.append(tr.timestamp.time())
             if account.id_ == tr.target_account:
                 temp_balance = temp_balance + tr.balance_netto
             else:
                 temp_balance = temp_balance - tr.balance_brutto
             balance_y.append(temp_balance)
+
+        time_x.append(datetime.now().time())
+        balance_y.append(account.balance)
 
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=time_x, y=balance_y))
@@ -85,7 +87,11 @@ def create_account(request: HttpRequest) -> HttpResponse:
         form = forms.CreateAccountForm(request.POST)
         if form.is_valid():
             currency = form.cleaned_data['currency']
-            database.save_account(Account(id_=uuid4(), currency=currency, balance=Decimal(0)))
+            database.save_account(Account(id_=uuid4(),
+                                          currency=currency,
+                                          balance=Decimal(0),
+                                          creation_timestamp=datetime.now(),
+                                          ))
             return HttpResponseRedirect(reverse('accounts_list'))
     return render(request, "add_account.html")
 

@@ -12,13 +12,6 @@ from transaction.transaction import Transaction
 
 
 def get_transaction(source: Account, target: Account) -> Transaction:
-    now = datetime.now()
-    now = datetime(year=now.year,
-                   month=now.month,
-                   day=now.day,
-                   hour=now.hour,
-                   minute=now.minute,
-                   second=now.second)
     return Transaction(
         id_=uuid4(),
         source_account=source.id_,
@@ -27,7 +20,7 @@ def get_transaction(source: Account, target: Account) -> Transaction:
         balance_brutto=Decimal(10000),
         balance_netto=Decimal(9900),
         status='fulfilled',   # TODO: ---------------------------------------------------
-        timestamp=now,
+        timestamp=datetime.now().replace(microsecond=0),
     )
 
 
