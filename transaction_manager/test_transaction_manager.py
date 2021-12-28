@@ -42,4 +42,22 @@ class TestTransactionManager:
         assert account2_new.balance == account2.balance + transaction.balance_netto
 
         # transaction with same account
+        transaction2 = Transaction(
+            id_=uuid4(),
+            source_account=uuid4(),
+            target_account=account1.id_,
+            balance_brutto=Decimal(500),
+            balance_netto=None,
+            currency=account1_new.currency,
+            status=TransactionStatus.PENDING,
+            timestamp=datetime.now(),
+        )
+        result1 = manager.cash_deposit(transaction2)
+        account1_deposited = database_connected.get_account(account1.id_)
+        assert account1_deposited.balance == account1_new.balance + transaction2.balance_netto
+        assert result1 == "Successful deposit"
 
+        # trying to pass the transaction2 again
+        transaction2.currency = "USD"
+        result2 = manager.cash_deposit(transaction2)
+        assert result2 == "Transaction already fulfilled"
