@@ -1,28 +1,13 @@
-import time
+
 from datetime import datetime
 from decimal import Decimal
 from uuid import uuid4
-
-import pytest
 
 from account.account import Account
 from database.database import ObjectNotFound, Database
 from database.implementations.mysql_database import DatabaseMySQL
 from transaction.transaction import Transaction
 from transaction_manager.status import TransactionStatus
-
-
-def get_transaction(source: Account, target: Account) -> Transaction:
-    return Transaction(
-        id_=uuid4(),
-        source_account=source.id_,
-        target_account=target.id_,
-        currency=source.currency,
-        balance_brutto=Decimal(10000),
-        balance_netto=Decimal(9900),
-        status=TransactionStatus.PENDING,
-        timestamp=datetime.now().replace(microsecond=0),
-    )
 
 
 class TestAllDatabases:
@@ -62,7 +47,7 @@ class TestAllDatabases:
         database_connected.save_account(account3)
         database_connected.save_account(account4)
 
-        transaction = get_transaction(account3, account4)
+        transaction = Transaction.get_transaction(account3, account4)
         database_connected.save_transaction(transaction)
 
         assert transaction == database_connected.get_transaction(transaction.id_)

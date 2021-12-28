@@ -4,6 +4,9 @@ from decimal import Decimal
 from typing import Optional
 from uuid import UUID
 
+from account.account import Account
+from transaction_manager.status import TransactionStatus
+
 
 @dataclass
 class Transaction:
@@ -16,4 +19,16 @@ class Transaction:
     status: str
     timestamp: datetime  # when transaction happens
 
-    # TODO: raise exception if source and target currencies and currency do not match
+    # factory method for tests
+    @classmethod
+    def get_transaction(cls, source: Account, target: Account) -> "Transaction":
+        return cls(
+            id_=uuid4(),
+            source_account=source.id_,
+            target_account=target.id_,
+            currency=source.currency,
+            balance_brutto=Decimal(1000),
+            balance_netto=Decimal(990),
+            status=TransactionStatus.PENDING,
+            timestamp=datetime.now().replace(microsecond=0),
+        )

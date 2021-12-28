@@ -9,19 +9,6 @@ from transaction_manager.manager import TransactionManager
 from transaction_manager.status import TransactionStatus
 
 
-def get_transaction(source: Account, target: Account) -> Transaction:
-    return Transaction(
-        id_=uuid4(),
-        source_account=source.id_,
-        target_account=target.id_,
-        currency=source.currency,
-        balance_brutto=Decimal(1000),
-        balance_netto=Decimal(990),
-        status=TransactionStatus.PENDING,
-        timestamp=datetime.now().replace(microsecond=0),
-    )
-
-
 def get_account() -> Account:
     return Account(
         id_=uuid4(),
@@ -41,7 +28,7 @@ class TestTransactionManager:
 
         manager = TransactionManager(database=database_connected)
 
-        transaction = get_transaction(account1, account2)
+        transaction = Transaction.get_transaction(account1, account2)
 
         manager.transfer(transaction)
 
