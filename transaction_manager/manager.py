@@ -85,3 +85,4 @@ class TransactionManager:
 
     # TODO: transaction and account balances: enforce positive values!!!
     # TODO: error handling, send message back
+    # TODO: set brutto instead of netto

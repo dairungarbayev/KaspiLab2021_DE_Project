@@ -6,12 +6,25 @@
 </head>
 <body>
 
-<button type="button" onclick="window.location='/accounts/{{source_account.id_}}'">Go Back</button>
+<button type="button" onclick="window.location='/accounts/{{account.id_}}'">Go Back</button>
 
+<div class="row d-flex justify-content-center flex-nowrap">
+    <h3>Make a cash deposit</h3>
+</div>
+
+<div>
+<label>Depositing to: {{account.id_}}</label>
+</div>
+<div>
+<label>Currency:      {{account.currency}}</label>
+</div>
 <form method="post">
-    <input id="transfer" type="submit" value="Deposit cash">
-    <input type="text" name="deposit_amount">
+    <label for="deposit_amount_field"></label>
+    <input id="deposit_amount_field" type="text" name="deposit_amount">
+    <input type="submit" value="Deposit cash">
 </form>
-
+<div>
+<label>{{result}}</label>
+</div>
 </body>
 </html>
