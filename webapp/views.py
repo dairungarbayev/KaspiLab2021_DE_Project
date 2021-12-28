@@ -55,21 +55,23 @@ def account_transactions(request: HttpRequest, account_id: UUID) -> HttpResponse
     account = database.get_account(account_id)
     acc_transactions = database.get_single_account_transactions(account_id=account_id)
 
-    # init_time
-    temp_balance = Decimal(0)
-    time_x = []
-    balance_y = []
-    for tr in acc_transactions:
-        time_x.append(tr.timestamp.date())
-        if account.id_ == tr.target_account:
-            temp_balance = temp_balance + tr.balance_netto
-        else:
-            temp_balance = temp_balance - tr.balance_brutto
-        balance_y.append(temp_balance)
+    graph_div = ''
+    if acc_transactions is not None:
+        # init_time
+        temp_balance = Decimal(0)
+        time_x = []
+        balance_y = []
+        for tr in acc_transactions:
+            time_x.append(tr.timestamp.date())
+            if account.id_ == tr.target_account:
+                temp_balance = temp_balance + tr.balance_netto
+            else:
+                temp_balance = temp_balance - tr.balance_brutto
+            balance_y.append(temp_balance)
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=time_x, y=balance_y))
-    graph_div = plotly.offline.plot(fig, auto_open=False, output_type="div")
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=time_x, y=balance_y))
+        graph_div = plotly.offline.plot(fig, auto_open=False, output_type="div")
 
     return render(request,
                   "account_transactions.html",
@@ -133,3 +135,4 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
 
 # TODO: deposit, transfer and create_account center, add titles and labels and instructions, show result, make pretty
 # TODO: maybe make source_id in transaction optional for depositing, enforce source_id in TransactionManager
+
