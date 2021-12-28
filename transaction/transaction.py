@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from account.account import Account
 from transaction_manager.status import TransactionStatus
@@ -18,6 +18,13 @@ class Transaction:
     currency: str
     status: str
     timestamp: datetime  # when transaction happens
+
+    def __lt__(self, other: "Transaction") -> bool:
+        # transactions are sorted by timestamp
+        return self.timestamp < other.timestamp
+
+    def __gt__(self, other: "Transaction") -> bool:
+        return self.timestamp > other.timestamp
 
     # factory method for tests
     @classmethod
