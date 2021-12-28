@@ -6,6 +6,7 @@ from account.account import Account
 from database.database import Database
 from transaction.transaction import Transaction
 from transaction_manager.manager import TransactionManager
+from transaction_manager.status import TransactionStatus
 
 
 def get_transaction(source: Account, target: Account) -> Transaction:
@@ -16,7 +17,7 @@ def get_transaction(source: Account, target: Account) -> Transaction:
         currency=source.currency,
         balance_brutto=Decimal(1000),
         balance_netto=Decimal(990),
-        status='pending',   # TODO: ---------------------------------------------------
+        status=TransactionStatus.PENDING,
         timestamp=datetime.now().replace(microsecond=0),
     )
 
@@ -45,7 +46,7 @@ class TestTransactionManager:
         manager.transfer(transaction)
 
         saved_transaction = database_connected.get_transaction(transaction.id_)
-        assert saved_transaction.status == 'fulfilled'
+        assert saved_transaction.status == TransactionStatus.FULFILLED
 
         account1_new = database_connected.get_account(account1.id_)
         account2_new = database_connected.get_account(account2.id_)

@@ -16,14 +16,13 @@ from account.account import Account
 from database.implementations.mysql_database import DatabaseMySQL
 from transaction.transaction import Transaction
 from transaction_manager.manager import TransactionManager
+from transaction_manager.status import TransactionStatus
 from webapp import forms
 
-PASS = "10Guine@Pig$@teLion"     # TODO: read from environment variables
-# PASS = os.getenv("MySQL_local_password")   # TODO: restart machine
 
 connection = {"host": "localhost",
               "user": "root",
-              "password": PASS,
+              "password": os.getenv("MYSQL_LOCAL_PASSWORD"),
               "database": "dbtest"
               }
 
@@ -118,7 +117,7 @@ def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
                 balance_brutto=None,
                 balance_netto=Decimal(balance_netto),
                 currency=source_account.currency,
-                status='pending',
+                status=TransactionStatus.PENDING,
                 timestamp=datetime.now(),
             )
             result = transaction_manager.transfer(transaction)
@@ -141,7 +140,7 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
                 balance_brutto=Decimal(balance_brutto),
                 balance_netto=None,
                 currency=account.currency,
-                status='pending',
+                status=TransactionStatus.PENDING,
                 timestamp=datetime.now(),
             )
             result = transaction_manager.cash_deposit(transaction)

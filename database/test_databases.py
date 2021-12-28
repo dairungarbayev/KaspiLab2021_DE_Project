@@ -9,6 +9,7 @@ from account.account import Account
 from database.database import ObjectNotFound, Database
 from database.implementations.mysql_database import DatabaseMySQL
 from transaction.transaction import Transaction
+from transaction_manager.status import TransactionStatus
 
 
 def get_transaction(source: Account, target: Account) -> Transaction:
@@ -19,7 +20,7 @@ def get_transaction(source: Account, target: Account) -> Transaction:
         currency=source.currency,
         balance_brutto=Decimal(10000),
         balance_netto=Decimal(9900),
-        status='fulfilled',   # TODO: ---------------------------------------------------
+        status=TransactionStatus.PENDING,
         timestamp=datetime.now().replace(microsecond=0),
     )
 

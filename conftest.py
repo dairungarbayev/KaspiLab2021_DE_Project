@@ -1,5 +1,5 @@
-PASS = "10Guine@Pig$@teLion"     # TODO: read from environment variables
 
+import os
 from typing import Type, Any
 
 import pytest
@@ -12,7 +12,7 @@ from database.implementations.mysql_database import DatabaseMySQL
 def connection_dict(request: Any) -> dict:
     return {"host": "localhost",
             "user": "root",
-            "password": PASS,
+            "password": os.getenv("MYSQL_LOCAL_PASSWORD"),
             "database": "dbtest"
             }
 
