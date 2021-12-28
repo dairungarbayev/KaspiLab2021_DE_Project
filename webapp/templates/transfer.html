@@ -8,11 +8,28 @@
 
 <button type="button" onclick="window.location='/accounts/{{source_account.id_}}'">Go Back</button>
 
+<div class="row d-flex justify-content-center flex-nowrap">
+    <h3>Transfer cash</h3>
+</div>
+
+<div>
+<label>Currency: {{source_account.currency}}</label>
+</div>
+
+<div>
+<label>Account balance: {{source_account.balance}}</label>
+</div>
+
 <form method="post">
-    <input id="transfer" type="submit" value="Transfer">
-    <input type="text" name="amount">
-    <input type="text" name="target_account">
+    <label for="target_account_field">Type recipient's account ID</label>
+    <input type="text" name="target_account" id="target_account_field" size="20">
+    <label for="amount_field">Transfer amount (netto)</label>
+    <input type="text" name="amount" id="amount_field">
+    <input type="submit" value="Transfer">
 </form>
 
+<div>
+<label>{{result}}</label>
+</div>
 </body>
 </html>

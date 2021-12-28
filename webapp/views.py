@@ -92,7 +92,7 @@ def create_account(request: HttpRequest) -> HttpResponse:
 
 def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
     source_account = database.get_account(account_id)
-
+    result = ""
     if request.method == 'POST':
         form = forms.TransferCashForm(request.POST)
         if form.is_valid():
@@ -111,7 +111,7 @@ def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
             result = transaction_manager.transfer(transaction)
             # if result == "Successful transaction":
             #     return HttpResponseRedirect(reverse('transactions_list'))
-    return render(request, "transfer.html", context={"source_account": source_account})
+    return render(request, "transfer.html", context={"source_account": source_account, "result": result})
 
 
 def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
@@ -136,3 +136,4 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
 
 # TODO: deposit, transfer and create_account center, add titles and labels and instructions, show result, make pretty
 # TODO: maybe make source_id in transaction optional for depositing, enforce source_id in TransactionManager
+
