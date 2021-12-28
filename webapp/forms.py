@@ -2,7 +2,7 @@ from django import forms
 
 
 class CreateAccountForm(forms.Form):
-    currency = forms.CharField(label='currency')
+    currency = forms.CharField()
 
 
 class TransferCashForm(forms.Form):
