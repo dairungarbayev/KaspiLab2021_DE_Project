@@ -11,6 +11,19 @@
 <button type="button" onclick="window.location='{{account.id_}}/deposit_cash'">Deposit cash</button>
 
 <table class="table table-hover" style="margin: 1em">
+    <thead class="thead-dark">
+    <tr>
+        <th>ID</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Currency</th>
+        <th>Brutto</th>
+        <th>Netto</th>
+        <th>Status</th>
+        <th>Time</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for transaction in account_transactions %}
     <tr>
         <td>{{transaction.id_}}</td>
@@ -23,6 +36,7 @@
         <td>{{transaction.timestamp}}</td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 
 </body>

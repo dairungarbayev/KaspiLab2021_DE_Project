@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID, uuid4
@@ -14,6 +15,7 @@ from transaction_manager.manager import TransactionManager
 from webapp import forms
 
 PASS = "10Guine@Pig$@teLion"     # TODO: read from environment variables
+# PASS = os.getenv("MySQL_local_password")   # TODO: restart machine
 
 connection = {"host": "localhost",
               "user": "root",
@@ -24,8 +26,8 @@ connection = {"host": "localhost",
 database = DatabaseMySQL(connection=connection)
 transaction_manager = TransactionManager(database=database)
 
-client_id = UUID("5309c77a-9487-49d6-9185-6dae9f9c79ed")
-
+# client_id = UUID("5309c77a-9487-49d6-9185-6dae9f9c79ed")
+client_id = UUID("aaaaaaaa-0000-aaaa-0000-aaaaaaaaaaaa")
 
 def redirect_to_list(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect('accounts/')
@@ -97,3 +99,6 @@ def deposit_cash(request: HttpRequest, account_id: UUID) -> HttpResponse:
             )
             result = transaction_manager.cash_deposit(transaction)
     return render(request, "cash_deposit.html", context={"account": account})
+
+# TODO: deposit, transfer and create_account center, add titles and labels and instructions, show result, make pretty
+# TODO: maybe make source_id in transaction optional for depositing, enforce source_id in TransactionManager
