@@ -115,7 +115,7 @@ def transfer(request: HttpRequest, account_id: UUID) -> HttpResponse:
             transaction = Transaction(
                 id_=uuid4(),
                 source_account=source_account.id_,
-                target_account=UUID(target_account),
+                target_account=target_account,
                 balance_brutto=None,
                 balance_netto=Decimal(balance_netto),
                 currency=source_account.currency,

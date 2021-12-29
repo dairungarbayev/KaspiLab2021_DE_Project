@@ -8,10 +8,10 @@ class CreateAccountForm(forms.Form):
 
 
 class TransferCashForm(forms.Form):
-    amount = forms.CharField()
-    target_account = forms.CharField()
+    amount = forms.FloatField()
+    target_account = forms.UUIDField()
 
 
 class DepositCashForm(forms.Form):
-    deposit_amount = forms.CharField()
+    deposit_amount = forms.FloatField()
 
